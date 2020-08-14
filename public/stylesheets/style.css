@@ -1,8 +1,17 @@
 body {
   padding: 50px;
   font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+　padding-bottom: 20px;
 }
 
 a {
   color: #00B7FF;
+}
+
+.navbar {
+  margin-bottom: 20px;
+}
+
+nav.navbar>div>form.form-inline{
+	margin-right: 10px;
 }
