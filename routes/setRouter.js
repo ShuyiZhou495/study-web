@@ -1,6 +1,7 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
+const cors = require('./cors');
 
 const Sets = require('../models/set');
 
@@ -9,15 +10,17 @@ const setRouter = express.Router();
 setRouter.use(bodyParser.json());
 
 setRouter.route('/')
-.get((req, res, next) => {
-    Sets.find({})
+.options(cors.corsWithOptions, (req, res) => {res.sendStatus(200)})
+.get(cors.cors, (req, res, next) => {
+    Sets.find(req.query)
     .then((sets)=>{
         res.statusCode = 200;
         res.setHeader('Content-Type', 'application/json');
-        res.json(sets);
+        console.log(sets);
+        return res.json(sets);
     })
 })
-.post((req, res, next) => {
+.post(cors.cors, (req, res, next) => {
     Sets.create(req.body)
     .then((sets)=>{
         console.log('note created', sets);
@@ -26,11 +29,11 @@ setRouter.route('/')
         res.json(sets);
     })
 })
-.put((req, res, next) => {
+.put(cors.cors, (req, res, next) => {
     res.statusCode = 403;
     res.end('PUT operation not supported on /sets');
 })
-.delete((req, res, next) => {
+.delete(cors.cors, (req, res, next) => {
     Sets.remove({})
     .then((resp) => {
         res.statusCode = 200;
@@ -40,7 +43,8 @@ setRouter.route('/')
 });
 
 setRouter.route('/:setID')
-.get((req, res, next) => {
+.options(cors.corsWithOptions, (req, res) => {res.sendStatus(200)})
+.get(cors.cors, (req, res, next) => {
     Sets.findById(req.params.setID)
     .then((sets) => {
         res.statusCode = 200;
@@ -49,11 +53,11 @@ setRouter.route('/:setID')
     }, (err) => next(err))
     .catch((err) => next(err)); 
 })
-.post((req, res, next) => {
+.post(cors.cors, (req, res, next) => {
     res.statusCode = 403;
     res.end('POST operation not supported on /sets/'+ req.params.setID);
 })
-.put((req, res, next) => {
+.put(cors.cors, (req, res, next) => {
     Sets.findByIdAndUpdate(req.params.setID, {
         $set: req.body
     }, { new: true }).exec()
@@ -64,7 +68,7 @@ setRouter.route('/:setID')
     }, (err) => next(err))
     .catch((err) => next(err));
 })
-.delete((req, res, next) => {
+.delete(cors.cors, (req, res, next) => {
     Sets.findByIdAndRemove(req.params.setID)
     .then((resp) => {
         res.statusCode = 200;
