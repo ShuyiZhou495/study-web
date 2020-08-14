@@ -21,6 +21,10 @@ var noteSchema = new Schema({
         type: String,
         default: ''
     },
+    comment: {
+        type: String,
+        default: ''
+    },
     examples: [exampleSchema],
     practice: {
         type: Boolean,
@@ -30,6 +34,28 @@ var noteSchema = new Schema({
     timestamps: true
 });
 
-var Notes = mongoose.model('Note', noteSchema);
+var setSchema = new Schema({
+    setname: {
+        type: String,
+        required: true
+    },
+    author: {
+        type: String,
+        required: true
+    },
+    notes: [noteSchema],
+    description: {
+        type: String,
+        default: ''
+    },
+    photo: {
+        type: String,
+        default: ''
+    }
+}, {
+    timestamps: true
+})
 
-module.exports = Notes;
+var Sets = mongoose.model('Set', setSchema);
+
+module.exports = Sets;
