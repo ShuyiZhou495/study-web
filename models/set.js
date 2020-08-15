@@ -21,6 +21,14 @@ var noteSchema = new Schema({
         type: String,
         default: ''
     },
+    pronunce: {
+        type: String,
+        default:''
+    },
+    recording: {
+        type: String,
+        default:''
+    },
     comment: {
         type: String,
         default: ''
@@ -34,6 +42,14 @@ var noteSchema = new Schema({
     timestamps: true
 });
 
+var pageSchema = new Schema({
+    description: {
+        type: String,
+        default: ''
+    },
+    notes: [noteSchema]
+}, {timestamps: true});
+
 var setSchema = new Schema({
     setname: {
         type: String,
@@ -43,7 +59,23 @@ var setSchema = new Schema({
         type: String,
         required: true
     },
-    notes: [noteSchema],
+    textbook: {
+        type: String,
+        required: true
+    },
+    level: {
+        type: String,
+        enum: ['Hard', 'Intermediate', 'Beginner']
+    },
+    fromLanguage: {
+        type: String,
+        required: true
+    },
+    toLanguage:{
+        type: String,
+        required: true
+    },
+    pages: [pageSchema],
     description: {
         type: String,
         default: ''
