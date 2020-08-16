@@ -15,9 +15,11 @@ and keep this command window open
 1. Open another command window and then type the following at the command prompt to start the mongo REPL shell: `mongo`
 2. type `use study-page`
 3. you can close the command window
-## front end
+## server
 1. install `npm`
 2. `npm -v`
 3. `npm install` install package
 4. `npm start` to start
 5. the address is [127.0.0.1:3000]
+### angular
+go to angular folder and run by `ng serve`
