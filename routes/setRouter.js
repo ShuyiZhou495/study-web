@@ -78,4 +78,336 @@ setRouter.route('/:setID')
     .catch((err) => next(err));
 });
 
+setRouter.route('/:setId/pages')
+.get((req,res,next) => {
+    Sets.findById(req.params.setId)
+    .then((set) => {
+        if (set != null) {
+            res.Status = 200;
+            res.setHeader('Content-Type', 'application/json');
+            res.json(set.pages);
+        }
+        else {
+            err = new Error('Set ' + req.params.setId + " not exist");
+            err.status = 404;
+            return next(err);
+        }
+    }, (err) => next(err))
+    .catch((err) => next(err));       
+})
+.post( (req,res,next) => {
+    Sets.findById(req.params.setId)
+    .then((set) => {
+        if (set != null) {
+            set.pages.push(req.body);
+            set.save()
+            .then((set) => {
+                Sets.findById(set._id)
+                    .then((set) => {
+                        res.Status = 200;
+                        res.setHeader('Content-Type', 'application/json');
+                        res.json(set);
+                    })
+                }, (err) => next(err));
+        }
+        else {
+            err = new Error('Set ' + req.params.setId + " not exist");
+            err.status = 404;
+            return next(err);
+        }
+    }, (err) => next(err))
+    .catch((err) => next(err));
+})
+.put( (req,res,next) => {
+    res.statusCode = 403;
+    res.end('PUT operation not supported on /Sets/' + 
+    req.params.setId + '/pages');
+})
+.delete((req,res,next) => {
+    Sets.findById(req.params.setId)
+    .then((set) => {
+        if(set!=null){
+            for (var i = (set.pages.length - 1); i >= 0; i--) {
+                set.pages.id(set.pages[i]._id).remove();
+            }
+            set.save()
+            .then((set) => {
+                res.Status = 200;
+                res.setHeader('Content-Type', 'application/json');
+                res.json(set);
+            }, (err) => next(err));
+        }
+        else {
+            err = new Error('Set ' + req.params.setId + " not exist");
+            err.status = 404;
+            return next(err);
+        }
+    }, (err) => next(err))
+    .catch((err) => next(err));
+});
+
+setRouter.route('/:setId/pages/:pageId')
+.get((req,res,next) => {
+    Sets.findById(req.params.setId)
+    .then((set) => {
+        if (set != null && set.pages.id(req.params.pageId) != null) {
+            res.Status = 200;
+            res.setHeader('Content-Type', 'application/json');
+            res.json(set.pages.id(req.params.pageId));
+        }
+        else if (set == null) {
+            err = new Error('Set ' + req.params.setId + " not exist");
+            err.status = 404;
+            return next(err);
+        }
+        else {
+            err = new Error('Page ' + req.params.pageId + " not exist");
+            err.status = 404;
+            return next(err);
+        }
+    }, (err) => next(err))
+    .catch((err) => next(err));   
+})
+.post( (req,res,next) => {
+    res.statusCode = 403;
+    res.end('POST operation not supported on /Sets/' + req.params.setId
+    + '/pages/' + req.params.pageId);
+})
+.put( (req,res,next) => {
+    Sets.findById(req.params.setId)
+    .then((set) => {
+        if (set != null && set.pages.id(req.params.pageId) != null) {
+            if (req.body.description){
+                set.pages.id(req.params.pageId).description = req.body.description;
+            }
+            set.save()
+            .then((set) => {
+                Sets.findById(set._id)
+                .then((set) => {
+                    res.Status = 200;
+                    res.setHeader('Content-Type', 'application/json');
+                    res.json(set);
+                })
+            }, (err) => next(err));
+        }
+        else if (set == null) {
+            err = new Error('Set ' + req.params.setId + " not exist");
+            err.status = 404;
+            return next(err);
+        }
+        else {
+            err = new Error('Page  ' + req.params.pageId + " not exist");
+            err.status = 404;
+            return next(err);
+        }
+    }, (err) => next(err))
+    .catch((err) => next(err));
+})
+.delete( (req,res,next) => {
+    Sets.findById(req.params.setId)
+    .then((set) => {
+        if (set != null && set.pages.id(req.params.pageId) != null) {
+            set.pages.id(req.params.pageId).remove();
+            set.save()
+            .then((set) => {
+                Sets.findById(set._id)
+                .then((set) => {
+                    res.Status = 200;
+                    res.setHeader('Content-Type', 'application/json');
+                    res.json(set);
+                })
+            }, (err) => next(err));
+        }
+        else if (set == null) {
+            err = new Error('Set ' + req.params.setId + " not exist");
+            err.status = 404;
+            return next(err);
+        }
+        else {
+            err = new Error('Set ' + req.params.setId + " not exist");
+            err.status = 404;
+            return next(err);
+        }
+    }, (err) => next(err))
+    .catch((err) => next(err));
+});
+
+setRouter.route('/:setId/pages/:pageId/notes')
+.get((req,res,next) => {
+    Sets.findById(req.params.setId)
+    .then((set) => {
+        if (set != null && set.pages.id(req.params.pageId) != null) {
+            res.Status = 200;
+            res.setHeader('Content-Type', 'application/json');
+            res.json(set.pages.id(req.params.pageId).notes);
+        }
+        else if (set == null) {
+            err = new Error('Set ' + req.params.setId + " not exist");
+            err.status = 404;
+            return next(err);
+        }
+        else {
+            err = new Error('Page ' + req.params.pageId + " not exist");
+            err.status = 404;
+            return next(err);
+        }
+    }, (err) => next(err))
+    .catch((err) => next(err));   
+})
+.post( (req,res,next) => {
+    Sets.findById(req.params.setId)
+    .then((set) => {
+        if (set != null && set.pages.id(req.params.pageId) != null) {
+            set.pages.id(req.params.pageId).notes.push(req.body);
+            set.save()
+            .then((set) => {
+                Sets.findById(set._id)
+                    .then((set) => {
+                        res.Status = 200;
+                        res.setHeader('Content-Type', 'application/json');
+                        res.json(set.pages.id(req.params.pageId));
+                    })
+                }, (err) => next(err));
+        }
+        else if (set == null) {
+            err = new Error('Set ' + req.params.setId + " not exist");
+            err.status = 404;
+            return next(err);
+        }
+        else {
+            err = new Error('Page ' + req.params.pageId + " not exist");
+            err.status = 404;
+            return next(err);
+        }
+    }, (err) => next(err))
+    .catch((err) => next(err)); 
+})
+.put( (req,res,next) => {
+    res.statusCode = 403;
+    res.end('PUT operation not supported on /Sets/' + 
+    req.params.setId + '/pages' + req.params.pageId + '/notes');
+})
+.delete( (req,res,next) => {
+    Sets.findById(req.params.setId)
+    .then((set) => {
+        if (set != null && set.pages.id(req.params.pageId) != null) {
+            for (var i = (set.pages.id(req.params.pageId).notes.length - 1); i >= 0; i--) {
+            set.pages.id(req.params.pageId).notes.id(set.pages.id(req.params.pageId).notes[0]._id).remove()
+            }
+            set.save()
+            .then((set) => {
+                Sets.findById(set._id)
+                .then((set) => {
+                    res.Status = 200;
+                    res.setHeader('Content-Type', 'application/json');
+                    res.json(set.pages.id(req.params.pageId));
+                })
+            }, (err) => next(err));
+        }
+        else if (set == null) {
+            err = new Error('Set ' + req.params.setId + " not exist");
+            err.status = 404;
+            return next(err);
+        }
+        else {
+            err = new Error('Page ' + req.params.pageId + " not exist");
+            err.status = 404;
+            return next(err);
+        }
+    }, (err) => next(err))
+    .catch((err) => next(err));
+});
+
+setRouter.route('/:setId/pages/:pageId/notes/:noteId')
+.get((req,res,next) => {
+    Sets.findById(req.params.setId)
+    .then((set) => {
+        if (set != null && set.pages.id(req.params.pageId) != null) {
+            res.Status = 200;
+            res.setHeader('Content-Type', 'application/json');
+            res.json(set.pages.id(req.params.pageId).notes.id(req.params.noteId));
+        }
+        else if (set == null) {
+            err = new Error('Set ' + req.params.setId + " not exist");
+            err.status = 404;
+            return next(err);
+        }
+        else {
+            err = new Error('Page ' + req.params.pageId + " not exist");
+            err.status = 404;
+            return next(err);
+        }
+    }, (err) => next(err))
+    .catch((err) => next(err));   
+})
+.put( (req,res,next) => {
+    Sets.findById(req.params.setId)
+    .then((set) => {
+        if (set != null && set.pages.id(req.params.pageId) != null) {
+            if (req.body.word){
+                set.pages.id(req.params.pageId).notes.id(req.params.noteId).word = req.body.word;
+            }
+            if (req.body.meaning){
+                set.pages.id(req.params.pageId).notes.id(req.params.noteId).meaning= req.body.meaning;
+            }
+            if (req.body.comment){
+                set.pages.id(req.params.pageId).notes.id(req.params.noteId).comment= req.body.comment;
+            }
+            set.save()
+            .then((set) => {
+                Sets.findById(set._id)
+                    .then((set) => {
+                        res.Status = 200;
+                        res.setHeader('Content-Type', 'application/json');
+                        res.json(set.pages.id(req.params.pageId).notes.id(req.params.noteId));
+                    })
+                }, (err) => next(err));
+        }
+        else if (set == null) {
+            err = new Error('Set ' + req.params.setId + " not exist");
+            err.status = 404;
+            return next(err);
+        }
+        else {
+            err = new Error('Page ' + req.params.pageId + " not exist");
+            err.status = 404;
+            return next(err);
+        }
+    }, (err) => next(err))
+    .catch((err) => next(err)); 
+})
+.post( (req,res,next) => {
+    res.statusCode = 403;
+    res.end('POST operation not supported on /Sets/' + 
+    req.params.setId + '/pages/' + req.params.pageId + '/notes/' + req.params.noteId);
+})
+.delete( (req,res,next) => {
+    Sets.findById(req.params.setId)
+    .then((set) => {
+        if (set != null && set.pages.id(req.params.pageId) != null) {
+            set.pages.id(req.params.pageId).notes.id(req.params.noteId).remove();
+            set.save()
+            .then((set) => {
+                Sets.findById(set._id)
+                .then((set) => {
+                    res.Status = 200;
+                    res.setHeader('Content-Type', 'application/json');
+                    res.json(set.pages.id(req.params.pageId));
+                })
+            }, (err) => next(err));
+        }
+        else if (set == null) {
+            err = new Error('Set ' + req.params.setId + " not exist");
+            err.status = 404;
+            return next(err);
+        }
+        else {
+            err = new Error('Page ' + req.params.pageId + " not exist");
+            err.status = 404;
+            return next(err);
+        }
+    }, (err) => next(err))
+    .catch((err) => next(err));
+});
+
 module.exports = setRouter;
