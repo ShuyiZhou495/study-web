@@ -79,7 +79,8 @@ setRouter.route('/:setID')
 });
 
 setRouter.route('/:setId/pages')
-.get((req,res,next) => {
+.options(cors.corsWithOptions, (req, res) => {res.sendStatus(200)})
+.get(cors.cors,(req,res,next) => {
     Sets.findById(req.params.setId)
     .then((set) => {
         if (set != null) {
@@ -95,7 +96,7 @@ setRouter.route('/:setId/pages')
     }, (err) => next(err))
     .catch((err) => next(err));       
 })
-.post( (req,res,next) => {
+.post(cors.cors, (req,res,next) => {
     Sets.findById(req.params.setId)
     .then((set) => {
         if (set != null) {
@@ -118,12 +119,12 @@ setRouter.route('/:setId/pages')
     }, (err) => next(err))
     .catch((err) => next(err));
 })
-.put( (req,res,next) => {
+.put(cors.cors, (req,res,next) => {
     res.statusCode = 403;
     res.end('PUT operation not supported on /Sets/' + 
     req.params.setId + '/pages');
 })
-.delete((req,res,next) => {
+.delete(cors.cors,(req,res,next) => {
     Sets.findById(req.params.setId)
     .then((set) => {
         if(set!=null){
@@ -147,7 +148,8 @@ setRouter.route('/:setId/pages')
 });
 
 setRouter.route('/:setId/pages/:pageId')
-.get((req,res,next) => {
+.options(cors.corsWithOptions, (req, res) => {res.sendStatus(200)})
+.get(cors.cors,(req,res,next) => {
     Sets.findById(req.params.setId)
     .then((set) => {
         if (set != null && set.pages.id(req.params.pageId) != null) {
@@ -168,12 +170,12 @@ setRouter.route('/:setId/pages/:pageId')
     }, (err) => next(err))
     .catch((err) => next(err));   
 })
-.post( (req,res,next) => {
+.post(cors.cors, (req,res,next) => {
     res.statusCode = 403;
     res.end('POST operation not supported on /Sets/' + req.params.setId
     + '/pages/' + req.params.pageId);
 })
-.put( (req,res,next) => {
+.put(cors.cors, (req,res,next) => {
     Sets.findById(req.params.setId)
     .then((set) => {
         if (set != null && set.pages.id(req.params.pageId) != null) {
@@ -203,7 +205,7 @@ setRouter.route('/:setId/pages/:pageId')
     }, (err) => next(err))
     .catch((err) => next(err));
 })
-.delete( (req,res,next) => {
+.delete(cors.cors, (req,res,next) => {
     Sets.findById(req.params.setId)
     .then((set) => {
         if (set != null && set.pages.id(req.params.pageId) != null) {
@@ -233,7 +235,8 @@ setRouter.route('/:setId/pages/:pageId')
 });
 
 setRouter.route('/:setId/pages/:pageId/notes')
-.get((req,res,next) => {
+.options(cors.corsWithOptions, (req, res) => {res.sendStatus(200)})
+.get(cors.cors,(req,res,next) => {
     Sets.findById(req.params.setId)
     .then((set) => {
         if (set != null && set.pages.id(req.params.pageId) != null) {
@@ -254,7 +257,7 @@ setRouter.route('/:setId/pages/:pageId/notes')
     }, (err) => next(err))
     .catch((err) => next(err));   
 })
-.post( (req,res,next) => {
+.post(cors.cors, (req,res,next) => {
     Sets.findById(req.params.setId)
     .then((set) => {
         if (set != null && set.pages.id(req.params.pageId) != null) {
@@ -282,12 +285,12 @@ setRouter.route('/:setId/pages/:pageId/notes')
     }, (err) => next(err))
     .catch((err) => next(err)); 
 })
-.put( (req,res,next) => {
+.put(cors.cors, (req,res,next) => {
     res.statusCode = 403;
     res.end('PUT operation not supported on /Sets/' + 
     req.params.setId + '/pages' + req.params.pageId + '/notes');
 })
-.delete( (req,res,next) => {
+.delete(cors.cors, (req,res,next) => {
     Sets.findById(req.params.setId)
     .then((set) => {
         if (set != null && set.pages.id(req.params.pageId) != null) {
@@ -319,7 +322,8 @@ setRouter.route('/:setId/pages/:pageId/notes')
 });
 
 setRouter.route('/:setId/pages/:pageId/notes/:noteId')
-.get((req,res,next) => {
+.options(cors.corsWithOptions, (req, res) => {res.sendStatus(200)})
+.get(cors.cors,(req,res,next) => {
     Sets.findById(req.params.setId)
     .then((set) => {
         if (set != null && set.pages.id(req.params.pageId) != null) {
@@ -340,7 +344,7 @@ setRouter.route('/:setId/pages/:pageId/notes/:noteId')
     }, (err) => next(err))
     .catch((err) => next(err));   
 })
-.put( (req,res,next) => {
+.put(cors.cors, (req,res,next) => {
     Sets.findById(req.params.setId)
     .then((set) => {
         if (set != null && set.pages.id(req.params.pageId) != null) {
@@ -376,12 +380,12 @@ setRouter.route('/:setId/pages/:pageId/notes/:noteId')
     }, (err) => next(err))
     .catch((err) => next(err)); 
 })
-.post( (req,res,next) => {
+.post(cors.cors, (req,res,next) => {
     res.statusCode = 403;
     res.end('POST operation not supported on /Sets/' + 
     req.params.setId + '/pages/' + req.params.pageId + '/notes/' + req.params.noteId);
 })
-.delete( (req,res,next) => {
+.delete(cors.cors, (req,res,next) => {
     Sets.findById(req.params.setId)
     .then((set) => {
         if (set != null && set.pages.id(req.params.pageId) != null) {

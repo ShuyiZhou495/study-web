@@ -6,7 +6,7 @@ const whitelist = ['http://localhost:3000', 'http://localhost:3443', 'http://loc
 var corsOptionsDelegate = (req, callback) => {
     var corsOption;
     console.log(req.header('Origin'));
-    if(whilelist.indexOf(req.header('Origin')) !== -1){
+    if(whitelist.indexOf(req.header('Origin')) !== -1){
         corsOptions = { origin: true };
     }
     else {
